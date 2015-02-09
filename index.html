@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>Storage-wars by codinatrix</title>
+    <meta name="description" content="Storage-wars : Experiment med IndexedDB">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Storage-wars</title>
   </head>
 
   <body>
-    <div id="container">
-      <div class="inner">
 
-        <header>
-          <h1>Storage-wars</h1>
-          <h2>Experiment med IndexedDB</h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/codinatrix/storage-wars">View on GitHub</a>
+
+          <h1 id="project_title">Storage-wars</h1>
+          <h2 id="project_tagline">Experiment med IndexedDB</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/codinatrix/storage-wars/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/codinatrix/storage-wars/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
+    </div>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/codinatrix/storage-wars/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/codinatrix/storage-wars/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/codinatrix/storage-wars" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="indexeddb-och-application-cache" class="anchor" href="#indexeddb-och-application-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>IndexedDB och Application Cache</h1>
 
-        <hr>
-
-        <section id="main_content">
-          <h1>
-<a id="indexeddb-och-application-cache-experiment-och-anteckningar" class="anchor" href="#indexeddb-och-application-cache-experiment-och-anteckningar" aria-hidden="true"><span class="octicon octicon-link"></span></a>IndexedDB och Application Cache experiment och anteckningar</h1>
+<h2>
+<a id="experiment-och-anteckningar" class="anchor" href="#experiment-och-anteckningar" aria-hidden="true"><span class="octicon octicon-link"></span></a>Experiment och anteckningar</h2>
 
 <pre><code>$ cd your_repo_root/repo_name
 $ git fetch origin
@@ -45,7 +48,7 @@ $ git checkout gh-pages
 <p>En databas som sitter på klientsidan i webbläsaren. Den gör offline läge möjligt och kan även användas för att göra online applikationer mycket snabbare. Den är i NoSQL stil, där man lagrar objekt istället för records eller rader. Den är transaktionsbaserad.</p>
 
 <h3>
-<a id="vad-finns-det-för-problem" class="anchor" href="#vad-finns-det-f%C3%B6r-problem" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vad finns det för problem?</h3>
+<a id="vad-finns-det-för-problem-med-indexeddb" class="anchor" href="#vad-finns-det-f%C3%B6r-problem-med-indexeddb" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vad finns det för problem med IndexedDB?</h3>
 
 <p>API-en är inte samma på varje webbläsaren, och inte hellre samma på varje version av en webbläsare. Så det är svårt att använda IndexedDB för en cross-browser app och appen kan sluta fungera om användaren uppdaterar sin webbläsare. I skrivande stund funkar den inte på Safari, Opera, iOS, Opera Mobile eller Android Browser.</p>
 
@@ -54,15 +57,22 @@ $ git checkout gh-pages
 
 <p>IndexedDB kan själv inte sökas med den slags queries man använder i SQL, till exempel "Hitta alla objekt som matchar en visst set" eller "Hitta alla objekt som innehåller 'Sodra'" eller logiska OR eller AND.</p>
 
+<p>Här är alla sökmetoder:</p>
+
+<p>IDBKeyRange.only() - Sök exakt nyckel
+IDBKeyRange.bound() - Sök nyckel inom ett intervall
+IDBKeyRange.upperBound() - Sök allt som är lägre än en viss nyckel
+IDBKeyRange.lowerBound() - Sök allt högre än en viss nyckel</p>
+
 <h3>
 <a id="vad-händer-om-en-databas-request-read-eller-write-misslyckas" class="anchor" href="#vad-h%C3%A4nder-om-en-databas-request-read-eller-write-misslyckas" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vad händer om en databas request (read eller write) misslyckas?</h3>
 
-<p>window.indexedDB.onerror() event triggers. Databasen rullas tillbaka och din Javascript kan hantera felet med en callback funktion till onerror() event. Du kan också avbryta en request (om det tar för lång tid till exempel) med en transaction.abort() metod, och den ska rullas tillbaka.</p>
+<p><code>window.indexedDB.onerror()</code> event triggers. Databasen rullas tillbaka och din Javascript kan hantera felet med en callback funktion till <code>onerror()</code> event. Du kan också avbryta en request (om det tar för lång tid till exempel) med en <code>transaction.abort()</code> metod, och den ska rullas tillbaka.</p>
 
 <h3>
 <a id="hur-bra-är-indexeddb-med-att-hantera-stora-mängder-data" class="anchor" href="#hur-bra-%C3%A4r-indexeddb-med-att-hantera-stora-m%C3%A4ngder-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hur bra är IndexedDB med att hantera stora mängder data?</h3>
 
-<p>Det kan gå långsamt och eftersom Javascript är så klart single-threaded, hela appen kan hänga sig. Man kan förmodligen fixa concurrency med en Web Worker, men jag har inte testat just det ännu. Annars får man fixa en overlay med "Vi jobbar på saken" meddelande medan den jobbar med databasen. Med transaction.abort() metod kan vi ge användaren en knapp för att avbryta och rullar tillbaka.</p>
+<p>Det kan gå långsamt och eftersom Javascript är så klart single-threaded, hela appen kan hänga sig. Man kan förmodligen fixa concurrency med en Web Worker, men jag har inte testat just det ännu. Annars får man fixa en overlay med "Vi jobbar på saken" meddelande medan den jobbar med databasen. Med <code>transaction.abort()</code> metod kan vi ge användaren en knapp för att avbryta och rullar tillbaka.</p>
 
 <h3>
 <a id="hur-mycket-data-kan-man-lagra-i-indexeddb" class="anchor" href="#hur-mycket-data-kan-man-lagra-i-indexeddb" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hur mycket data kan man lagra i IndexedDB?</h3>
@@ -73,15 +83,54 @@ $ git checkout gh-pages
 <a id="hur-smidigt-är-felhanteringen" class="anchor" href="#hur-smidigt-%C3%A4r-felhanteringen" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hur smidigt är felhanteringen?</h3>
 
 <p>Ganska smidigt. Fel bubblar upp, så man slipper hantera fel för varje request objekt, utan att man kan fixa fel till själva transaction eller databas objekt.</p>
-        </section>
 
-        <footer>
-          Storage-wars is maintained by <a href="https://github.com/codinatrix">codinatrix</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+<h2>
+<a id="application-cache" class="anchor" href="#application-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>Application Cache</h2>
 
-        
-      </div>
+<p>Med App Cache kan alla filer i en app (HTML-filer, CSS-filer, JS-filer och bilderna) lagras på användarens hård disk för att använda i offline läge eller för att göra online appar snabbare. Det fixar man genom att lista alla filer i en manifest fil.</p>
+
+<h3>
+<a id="hur-mycket-kan-man-cacha" class="anchor" href="#hur-mycket-kan-man-cacha" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hur mycket kan man cacha?</h3>
+
+<p>Man har 8MB för att börja med. Om man överstiger det ska IE11 frågar användaren för tillstånd att använda mer. Den maximala varierar mellan webbläsare. Chromes maximal är inte per domän utan att det finns en maximal för samtliga domäner (så din app kan nå maximalen på grund av att en Chrome användare var på en annan sida som cachade mycket).</p>
+
+<h3>
+<a id="kan-appen-kolla-cache-status" class="anchor" href="#kan-appen-kolla-cache-status" aria-hidden="true"><span class="octicon octicon-link"></span></a>Kan appen kolla cache status?</h3>
+
+<p>Japp. Javascript kan kolla cache status med <code>window.applicationCache</code>. På så sätt kan din Javascript kolla om sidan har uppdaterats och byta ut den gamla cachen för den nya.</p>
+
+<h3>
+<a id="vad-finns-det-för-problem-med-app-cache" class="anchor" href="#vad-finns-det-f%C3%B6r-problem-med-app-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vad finns det för problem med App Cache?</h3>
+
+<ul>
+<li><p>När klienten laddar ner alla filer som ska cachas måste nerladdning av varje fil lyckas eller hela processen avslutas. Om en fil t ex returnerar 404 får klienten ingen cache av någon fil alls. Dessutom finns det väldigt vag felhantering där man får bara "Error" utan någon felkod att förklara vad gick fel. </p></li>
+<li><p>Cachen uppdateras bara när manifest filen uppdateras. Om man uppdatera t ex index.html, användarna (både online och offline) ska se den gamla tills manifest filen ändras. Detta gör det viktigt att manifest filen själv inte cachas.</p></li>
+</ul>
+
+<p>Klienten kan kolla om manifest filen har ändrats efter sidan har redan laddats med <code>window.applicationCache.updateReady()</code>   metoden.</p>
+
+<ul>
+<li><p>Om manifest filen ändras i mitten av att klienten laddar ner innehåll, ska nerladdning misslyckas. Men manifest filen måste ändras för att uppdatera cachen! Det betyder att App Cache är bara en bra lösning för appar som ändras sällan.</p></li>
+<li><p>Man kan inte uppdatera en del av cachen. Om cachen ska uppdateras måste klienten laddar ner varje fil från början. Man uppdaterar cachen för alla filer eller inga filer.</p></li>
+<li><p>Varje fil som en sida använder måste cachas. T ex om index.html har bil.jpg som inte är i manifest filen, bil.jpg ska inte visas - inte även i online läge.</p></li>
+</ul>
+
+<h3>
+<a id="finns-det-ett-alternativ-till-app-cache" class="anchor" href="#finns-det-ett-alternativ-till-app-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>Finns det ett alternativ till App Cache?</h3>
+
+<p>En stökig lösning är att använda IndexedDB för att lagra allting (html filerna, CSS-filerna, bilderna, mm). Förmodligen inte en fungerande lösning men jag bara slänger ut idén.</p>
+      </section>
     </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Storage-wars maintained by <a href="https://github.com/codinatrix">codinatrix</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
   </body>
 </html>
