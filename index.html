@@ -32,36 +32,47 @@
 
         <section id="main_content">
           <h1>
-<a id="indexeddb-experiment" class="anchor" href="#indexeddb-experiment" aria-hidden="true"><span class="octicon octicon-link"></span></a>IndexedDB experiment</h1>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<a id="indexeddb-och-application-cache-experiment-och-anteckningar" class="anchor" href="#indexeddb-och-application-cache-experiment-och-anteckningar" aria-hidden="true"><span class="octicon octicon-link"></span></a>IndexedDB och Application Cache experiment och anteckningar</h1>
 
 <pre><code>$ cd your_repo_root/repo_name
 $ git fetch origin
 $ git checkout gh-pages
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<h2>
+<a id="indexeddb" class="anchor" href="#indexeddb" aria-hidden="true"><span class="octicon octicon-link"></span></a>IndexedDB</h2>
+
+<p>En databas som sitter på klientsidan i webbläsaren. Den gör offline läge möjligt och kan även användas för att göra online applikationer mycket snabbare. Den är i NoSQL stil, där man lagrar objekt istället för records eller rader. Den är transaktionsbaserad.</p>
 
 <h3>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a id="vad-finns-det-för-problem" class="anchor" href="#vad-finns-det-f%C3%B6r-problem" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vad finns det för problem?</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a id="rather-drive-stick" class="anchor" href="#rather-drive-stick" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>API-en är inte samma på varje webbläsaren, och inte hellre samma på varje version av en webbläsare. Så det är svårt att använda IndexedDB för en cross-browser app och appen kan sluta fungera om användaren uppdaterar sin webbläsare. I skrivande stund funkar den inte på Safari, Opera, iOS, Opera Mobile eller Android Browser.</p>
 
 <h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a id="hur-söker-man-i-databasen" class="anchor" href="#hur-s%C3%B6ker-man-i-databasen" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hur söker man i databasen?</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>IndexedDB kan själv inte sökas med den slags queries man använder i SQL, till exempel "Hitta alla objekt som matchar en visst set" eller "Hitta alla objekt som innehåller 'Sodra'" eller logiska OR eller AND.</p>
 
 <h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a id="vad-händer-om-en-databas-request-read-eller-write-misslyckas" class="anchor" href="#vad-h%C3%A4nder-om-en-databas-request-read-eller-write-misslyckas" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vad händer om en databas request (read eller write) misslyckas?</h3>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="https://help.github.com/pages">https://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p>window.indexedDB.onerror() event triggers. Databasen rullas tillbaka och din Javascript kan hantera felet med en callback funktion till onerror() event. Du kan också avbryta en request (om det tar för lång tid till exempel) med en transaction.abort() metod, och den ska rullas tillbaka.</p>
+
+<h3>
+<a id="hur-bra-är-indexeddb-med-att-hantera-stora-mängder-data" class="anchor" href="#hur-bra-%C3%A4r-indexeddb-med-att-hantera-stora-m%C3%A4ngder-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hur bra är IndexedDB med att hantera stora mängder data?</h3>
+
+<p>Det kan gå långsamt och eftersom Javascript är så klart single-threaded, hela appen kan hänga sig. Man kan förmodligen fixa concurrency med en Web Worker, men jag har inte testat just det ännu. Annars får man fixa en overlay med "Vi jobbar på saken" meddelande medan den jobbar med databasen. Med transaction.abort() metod kan vi ge användaren en knapp för att avbryta och rullar tillbaka.</p>
+
+<h3>
+<a id="hur-mycket-data-kan-man-lagra-i-indexeddb" class="anchor" href="#hur-mycket-data-kan-man-lagra-i-indexeddb" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hur mycket data kan man lagra i IndexedDB?</h3>
+
+<p>Man börjar med 10MB. Om det blir större ska webbläsaren fråga användaren för tillstånd att använda mer. Oavsett tillstånd kan det aldrig vara mer än 250MB. OBS! Ingen error kommer ifall man överstiger 250MB.</p>
+
+<h3>
+<a id="hur-smidigt-är-felhanteringen" class="anchor" href="#hur-smidigt-%C3%A4r-felhanteringen" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hur smidigt är felhanteringen?</h3>
+
+<p>Ganska smidigt. Fel bubblar upp, så man slipper hantera fel för varje request objekt, utan att man kan fixa fel till själva transaction eller databas objekt.</p>
         </section>
 
         <footer>
