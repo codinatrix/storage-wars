@@ -37,10 +37,7 @@
 <h2>
 <a id="experiment-och-anteckningar" class="anchor" href="#experiment-och-anteckningar" aria-hidden="true"><span class="octicon octicon-link"></span></a>Experiment och anteckningar</h2>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<hr>
 
 <h2>
 <a id="indexeddb" class="anchor" href="#indexeddb" aria-hidden="true"><span class="octicon octicon-link"></span></a>IndexedDB</h2>
@@ -60,10 +57,14 @@ $ git checkout gh-pages
 <p>Här är alla sökmetoder:</p>
 
 <ul>
-<li>IDBKeyRange.only() - Sök exakt nyckel</li>
-<li>IDBKeyRange.bound() - Sök nyckel inom ett intervall</li>
-<li>IDBKeyRange.upperBound() - Sök allt som är lägre än en viss nyckel</li>
-<li>IDBKeyRange.lowerBound() - Sök allt högre än en viss nyckel</li>
+<li>
+<code>IDBKeyRange.only()</code> - Sök exakt nyckel</li>
+<li>
+<code>IDBKeyRange.bound()</code> - Sök nyckel inom ett intervall</li>
+<li>
+<code>IDBKeyRange.upperBound()</code> - Sök allt som är lägre än en viss nyckel</li>
+<li>
+<code>IDBKeyRange.lowerBound()</code> - Sök allt högre än en viss nyckel</li>
 </ul>
 
 <h3>
@@ -106,12 +107,7 @@ $ git checkout gh-pages
 
 <ul>
 <li><p>När klienten laddar ner alla filer som ska cachas måste nerladdning av varje fil lyckas eller hela processen avslutas. Om en fil t ex returnerar 404 får klienten ingen cache av någon fil alls. Dessutom finns det väldigt vag felhantering där man får bara "Error" utan någon felkod att förklara vad gick fel. </p></li>
-<li><p>Cachen uppdateras bara när manifest filen uppdateras. Om man uppdatera t ex index.html, användarna (både online och offline) ska se den gamla tills manifest filen ändras. Detta gör det viktigt att manifest filen själv inte cachas.</p></li>
-</ul>
-
-<p>Klienten kan kolla om manifest filen har ändrats efter sidan har redan laddats med <code>window.applicationCache.updateReady()</code>   metoden.</p>
-
-<ul>
+<li><p>Cachen uppdateras bara när manifest filen uppdateras. Om man uppdatera t ex index.html, användarna (både online och offline) ska se den gamla tills manifest filen ändras. Detta gör det viktigt att manifest filen själv inte cachas. Klienten kan kolla om manifest filen har ändrats efter sidan har redan laddats med <code>window.applicationCache.updateReady()</code>   metoden.</p></li>
 <li><p>Om manifest filen ändras i mitten av att klienten laddar ner innehåll, ska nerladdning misslyckas. Men manifest filen måste ändras för att uppdatera cachen! Det betyder att App Cache är bara en bra lösning för appar som ändras sällan.</p></li>
 <li><p>Man kan inte uppdatera en del av cachen. Om cachen ska uppdateras måste klienten laddar ner varje fil från början. Man uppdaterar cachen för alla filer eller inga filer.</p></li>
 <li><p>Varje fil som en sida använder måste cachas. T ex om index.html har bil.jpg som inte är i manifest filen, bil.jpg ska inte visas - inte även i online läge.</p></li>
